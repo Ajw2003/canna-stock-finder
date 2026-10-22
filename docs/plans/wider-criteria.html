@@ -273,7 +273,7 @@ const PAGE = {
   "eyebrow": "Proposal for canna-stock-finder · nothing built yet",
   "approval": "Build plan approved: canna-stock-finder criteria",
   "short": {
-    "lead": "A survey of 4,791 products in CannaScraper's catalogue found 26 different terpenes, but the search script only looks for 11, and its matching has two bugs. This proposal makes it recognise all 26, adds ready-made effect profiles such as sleep and calm, and adds filters for other cannabinoids, for producers' effect words, and for searching every store in your province.",
+    "lead": "A survey of 4,791 products in CannaScraper's catalogue found 26 different terpenes (aroma compounds in the plant), but the search script only looks for 11, and its matching has two bugs. This proposal makes it recognise all 26 terpenes and all six cannabinoids the catalogue mentions, adds ready-made effect profiles such as sleep and calm, falls back to producers' effect descriptions when a product names no terpenes, and adds a search of every store in your province.",
     "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
@@ -307,16 +307,16 @@ const PAGE = {
         "Profiles",
         "Effect profiles with evidence labels",
         "",
-        "A --profile option that fills in the terpenes and cannabinoids for a goal, and says how strong the evidence is.",
+        "The --profile option fills in the terpenes and cannabinoids for a goal, and says how strong the evidence is.",
         "Choose which profiles to include (question 2)."
       ],
       [
         "bulb",
         "Filters",
-        "Cannabinoid, effect-word and whole-province filters",
+        "Cannabinoids, effect descriptions and whole-province search",
         "",
-        "--cannabinoids, --effects and --stores all.",
-        "Decide whether effect words change the ranking by default (question 3)."
+        "--cannabinoids filters on any of the six cannabinoids. An effect-description fallback covers products with no terpenes. --stores all searches every store in your province.",
+        "Decide how effect descriptions are used (questions 3 and 4)."
       ],
       [
         "lock",
@@ -324,7 +324,7 @@ const PAGE = {
         "You choose and approve",
         "you",
         "Your choices recorded in the decisions log, then the build.",
-        "Answer the three questions, tap Copy my reply, and send it."
+        "Answer the four questions, tap Copy my reply, and send it."
       ]
     ]
   },
@@ -334,7 +334,7 @@ const PAGE = {
       "Terpene list",
       "From 11 terpenes to all 26 found in the catalogue.",
       [
-        "11 terpenes, matched as loose pieces of text, so one name could match inside another",
+        "11 terpenes, matched as partial text, so one name could match inside a longer name",
         "26 terpenes, whole words, misspellings mapped"
       ],
       "Counts by number of products: caryophyllene 384, limonene 335, myrcene 281, linalool 117, pinene 109, humulene 77, farnesene 46, terpinolene 40, bisabolol 30, ocimene 29, nerolidol 22, terpineol 13, valencene 10, guaiol 8, eucalyptol 5. Nine more appear in 1 to 3 products each: geraniol, fenchol, cedrene, germacrene, phellandrene, carene, camphene, cymene and phytol. Two appear only under misspellings: terpinene and selinadiene. Producers also misspell common ones (caryopyllene, carophyllene, linolool, lumonene, franesene). Menthol appears in 22 products, usually as an added flavour, so it is shown separately from the terpenes.",
@@ -400,26 +400,26 @@ const PAGE = {
     [
       "new",
       "Cannabinoid filter",
-      "--cannabinoids cbg,cbn keeps products that mention either one.",
+      "--cannabinoids filters on any of the six cannabinoids the catalogue mentions.",
       null,
-      "Product descriptions mention CBD in 331 products, CBG in 178, CBN in 68, CBC in 32 and THCV in 10. All five are cannabinoids, like THC.",
+      "Product descriptions mention CBD in 331 products, CBG in 178, THCA in 170, CBN in 68, CBC in 32 and THCV in 10. All six are cannabinoids, like THC. --cannabinoids cbg,thcv keeps products that mention either one, and --avoid-cannabinoids thcv drops products that mention it. Profiles use these too: appetite avoids THCV, sleep ranks CBN higher, calm ranks CBD higher. THCA is the raw form of THC, so it is shown but not used to rank.",
       [
         "Only a minimum CBD amount can be set.",
-        "Filtering on any named cannabinoid.",
-        "You can ask for CBG or CBN products directly."
+        "Filtering on, or avoiding, any of the six cannabinoids.",
+        "You can ask for CBG or THCV products directly, or keep THCV out."
       ],
       null
     ],
     [
       "new",
-      "Effect-word ranking",
-      "--effects relax,sleep ranks by the producer's own effect words.",
+      "Effect descriptions as a fallback",
+      "When a product names no terpenes, its producer's effect description is used instead.",
       null,
-      "983 products describe effects in words such as relaxing, uplifting or sleepy. Producers word these very differently, so matches move a product up the ranking instead of removing products that don't match.",
+      "Only 540 of 4,791 products name a terpene, but 983 describe effects in words such as relaxing, uplifting or sleepy. Each profile gets a list of matching effect words. A product that names no terpenes is judged by those words instead of being left out or shown with no profile, and it is marked 'judged by description' so you can tell. --no-description-fallback turns this off, so only products that name terpenes are judged.",
       [
-        "Producers' effect words are ignored.",
-        "Products whose descriptions match rank higher.",
-        "Picks lean toward what producers say the product does."
+        "Products with no terpenes are either dropped or shown with no profile.",
+        "Those products are judged by their effect description, and marked as such.",
+        "Many more products can be matched to your goal."
       ],
       null
     ],
@@ -428,7 +428,7 @@ const PAGE = {
       "Whole-province search",
       "--stores all searches every store in your province.",
       null,
-      "Useful for finding where a specific product is in stock when the nearest stores are out.",
+      "Useful for finding where a specific product is in stock when the nearest stores have sold out of it.",
       [
         "Only the nearest five stores, or a number you set.",
         "An option to search every store.",
@@ -484,28 +484,47 @@ const PAGE = {
     ],
     [
       "effects",
-      "Should producers' effect words change the ranking by default?",
+      "When a product does name terpenes, should its effect description also affect the ranking?",
       [
         [
           "A",
-          "Only when --effects is used",
+          "No, terpenes decide",
           1,
-          "Rankings stay driven by terpenes unless you ask."
+          "Effect descriptions are used only for products with no terpenes."
         ],
         [
           "B",
-          "Always, whenever you use --profile, matching that profile's goal against producers' effect words",
+          "Yes, both count",
           0,
-          "Every profile also nudges products whose descriptions match its goal."
+          "A product whose description matches your goal ranks a little higher even when it names terpenes."
         ]
       ],
-      "Only when asked, because producers' wording is inconsistent."
+      "Terpenes are the stronger signal; descriptions are marketing copy written differently by every producer."
+    ],
+    [
+      "fallback",
+      "Should the effect-description fallback be on by default?",
+      [
+        [
+          "A",
+          "On, with a switch to turn it off",
+          1,
+          "More products are matched; each fallback match is labelled."
+        ],
+        [
+          "B",
+          "Off, with a switch to turn it on",
+          0,
+          "Only products that name terpenes are matched unless you ask."
+        ]
+      ],
+      "On, because 89% of products name no terpenes, and each fallback match is labelled."
     ]
   ],
   "wrapup": {
-    "summary": "A proposal to recognise all 26 terpenes, fix two matching bugs, and add effect profiles, cannabinoid filters, effect-word ranking and a whole-province search.",
-    "changing": "The search script, the SKILL.md instructions file, the README, the tests, and the system doc that describes matching.",
-    "blocking": "I won't edit any code until you answer the three questions and approve.",
+    "summary": "A proposal to recognise all 26 terpenes and six cannabinoids, fix two matching bugs, and add effect profiles, an effect-description fallback and a whole-province search.",
+    "changing": "The search script, the SKILL.md instructions file, the README, the tests, and the system document that describes how matching works (docs/4-systems/matching.md).",
+    "blocking": "I won't edit any code until you answer the four questions and approve.",
     "next": "I build it on the AjsAgent/initial-skill branch, run the tests and a live search, and show you the results.",
     "todo": [
       "Pick your answers (Choices).",
