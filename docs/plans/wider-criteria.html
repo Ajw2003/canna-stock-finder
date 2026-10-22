@@ -269,119 +269,250 @@ dialog.lightbox button{margin-top:10px}
 const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#e3eafc"/><circle cx="160" cy="90" r="40" fill="#2f5bd3"/></svg>');
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
-  "kind": "summary",
   "title": "Wider search criteria",
-  "eyebrow": "Proposal for canna-stock-finder, 21 October 2026",
+  "eyebrow": "Proposal for canna-stock-finder · nothing built yet",
   "approval": "Build plan approved: canna-stock-finder criteria",
   "short": {
-    "lead": "The survey of 4,791 products found 26 different terpenes, but the script only looks for 11, and its matching has two bugs. This proposal makes the script look for all 26, adds named effect profiles (sleep, calm and others) built from known terpene combinations, and adds cannabinoid and effect-word filters.",
-    "hint": "Tap each change to see what exists today, what it adds, and what the survey found.",
+    "lead": "A survey of 4,791 products in CannaScraper's catalogue found 26 different terpenes, but the search script only looks for 11, and its matching has two bugs. This proposal makes it recognise all 26, adds ready-made effect profiles such as sleep and calm, and adds filters for other cannabinoids, for producers' effect words, and for searching every store in your province.",
+    "hint": "Tap a step to see what it creates and what it needs from you.",
     "key": [
       [
-        "Survey",
-        "CannaScraper's catalog.json: 4,791 cannabis products, descriptions as of 1 September 2026"
+        "I build it",
+        ""
+      ],
+      [
+        "You decide",
+        "you"
       ]
     ],
     "items": [
       [
         "search",
-        "What the survey found",
-        "540 products name a terpene; 57 give a percentage",
-        "",
-        [
-          "540 of 4,791 cannabis products (11%) name at least one terpene, so most products can only be judged by lineage, cannabinoids and effect words.",
-          "Most named terpenes (number of products): caryophyllene 384, limonene 335, myrcene 281, linalool 117, pinene 109, humulene 77, farnesene 46, terpinolene 40, bisabolol 30, ocimene 29, nerolidol 22, terpineol 13, valencene 10, guaiol 8, eucalyptol 5. Nine more appear in 1 to 3 products each (geraniol, fenchol, cedrene, germacrene, phellandrene, carene, camphene, cymene, phytol), and two only in unlisted spellings (terpinene, selinadiene). Menthol appears in 22, usually as an added flavour.",
-          "57 products give terpene percentages, which show which terpene is actually strongest, instead of just which one is mentioned first.",
-          "983 products use effect words. 331 mention the cannabinoid CBD, 178 CBG, 68 CBN, 32 CBC and 10 THCV (all cannabinoids, like THC)."
-        ],
-        [
-          "Exists today: an 11-terpene list matched as plain text.",
-          "Two bugs. First, the search for 'nerol' also matches inside 'nerolidol', so 22 products are tagged with the wrong terpene. Second, the search for 'pinene' also matches inside 'terpinene' (5 products), so the pinene filter wrongly drops some products.",
-          "Producers misspell terpenes (caryopyllene, carophyllene, linolool, lumonene, franesene), which the current list misses."
-        ]
+        "Survey",
+        "What the catalogue contains",
+        "done",
+        "540 of 4,791 cannabis products name at least one terpene, 57 give terpene percentages, and 983 use effect words. The full counts are under Changes.",
+        "Nothing from you."
       ],
       [
         "bulb",
-        "Change 1: every terpene",
-        "All 26 terpenes, misspellings mapped, whole-word matching",
+        "Terpenes",
+        "Recognise all 26 terpenes",
         "",
-        [
-          "Recognise every terpene found in the survey, with known misspellings mapped to the right name.",
-          "Match whole words, which fixes both substring bugs.",
-          "Show menthol separately from the other terpenes, because it is usually an added flavour, not a cannabis terpene."
-        ],
-        [
-          "Exists today: 11 terpenes. Impact: more products get a terpene list, and fewer are wrongly dropped."
-        ]
+        "Every terpene found in the survey is recognised, misspellings are mapped to the right name, and whole-word matching fixes both bugs.",
+        "Choose where product descriptions come from (question 1)."
       ],
       [
         "bulb",
-        "Change 2: use percentages",
-        "Rank by measured dominance when a product gives it",
+        "Profiles",
+        "Effect profiles with evidence labels",
         "",
-        [
-          "When a description lists terpene percentages, rank by the largest one instead of the first one named.",
-          "Show the total terpene percentage when given."
-        ],
-        [
-          "Exists today: products are ranked by the first terpene named, and nothing else. Impact: 57 products ranked on real numbers."
-        ]
+        "A --profile option that fills in the terpenes and cannabinoids for a goal, and says how strong the evidence is.",
+        "Choose which profiles to include (question 2)."
       ],
       [
         "bulb",
-        "Change 3: effect profiles",
-        "A --profile option with known combinations and an evidence label",
+        "Filters",
+        "Cannabinoid, effect-word and whole-province filters",
         "",
-        [
-          "sleep: look for myrcene, linalool and caryophyllene, and CBN is a bonus; avoid pinene and terpinolene. Evidence: animal studies and user reports.",
-          "calm (low anxiety): look for linalool, caryophyllene and limonene, and CBD is a bonus; avoid pinene and terpinolene. Evidence: one controlled human trial for limonene.",
-          "focus-calm: look for limonene and caryophyllene in a sativa or hybrid; avoid pinene and terpinolene. Evidence: the limonene trial plus user reports.",
-          "creative / uplift: look for limonene, terpinolene, ocimene and valencene. Shows a warning that this is the profile most likely to cause anxiety. Evidence: user reports only.",
-          "laugh / euphoric: look for limonene and myrcene. Evidence: user reports only.",
-          "appetite: look for myrcene, caryophyllene and limonene; avoid humulene and THCV, both reported to suppress appetite. Evidence: small human studies for THCV, weak for humulene.",
-          "body / pain: look for myrcene, caryophyllene and humulene, and CBG is a bonus. Evidence: animal studies and user reports."
-        ],
-        [
-          "Exists today: you type terpene names by hand. Impact: '--profile sleep' picks the terpenes for you, and each profile says how strong its evidence is."
-        ]
+        "--cannabinoids, --effects and --stores all.",
+        "Decide whether effect words change the ranking by default (question 3)."
       ],
       [
-        "bulb",
-        "Change 4: cannabinoids and effect words",
-        "--cannabinoids, --effects, and a whole-province option",
-        "",
-        [
-          "--cannabinoids cbg,cbn keeps products whose descriptions mention either one.",
-          "--effects relax,sleep matches the producer's own effect words. Producers word these very differently, so it ranks products instead of removing any.",
-          "--stores all searches every store in your province, not just the nearest five."
-        ],
-        [
-          "Exists today: you can filter on CBD only, and it searches only the nearest five stores."
-        ]
+        "lock",
+        "Approve",
+        "You choose and approve",
+        "you",
+        "Your choices recorded in the decisions log, then the build.",
+        "Answer the three questions, tap Copy my reply, and send it."
       ]
     ]
   },
   "changes": [
     [
+      "chg",
+      "Terpene list",
+      "From 11 terpenes to all 26 found in the catalogue.",
+      [
+        "11 terpenes, matched as loose pieces of text, so one name could match inside another",
+        "26 terpenes, whole words, misspellings mapped"
+      ],
+      "Counts by number of products: caryophyllene 384, limonene 335, myrcene 281, linalool 117, pinene 109, humulene 77, farnesene 46, terpinolene 40, bisabolol 30, ocimene 29, nerolidol 22, terpineol 13, valencene 10, guaiol 8, eucalyptol 5. Nine more appear in 1 to 3 products each: geraniol, fenchol, cedrene, germacrene, phellandrene, carene, camphene, cymene and phytol. Two appear only under misspellings: terpinene and selinadiene. Producers also misspell common ones (caryopyllene, carophyllene, linolool, lumonene, franesene). Menthol appears in 22 products, usually as an added flavour, so it is shown separately from the terpenes.",
+      null,
+      [
+        [
+          "skills/canna-stock-finder/scripts/canna_find.py",
+          40,
+          4,
+          [
+            [
+              "The terpene list and its misspellings",
+              30,
+              2
+            ],
+            [
+              "Whole-word matching",
+              10,
+              2
+            ]
+          ]
+        ]
+      ]
+    ],
+    [
+      "chg",
+      "Two matching bugs",
+      "Fixed by matching whole words.",
+      [
+        "'nerol' found inside 'nerolidol'; 'pinene' found inside 'terpinene'",
+        "Each terpene matches only its own name"
+      ],
+      "The search for 'nerol' also matches inside 'nerolidol', so 22 products are tagged with a terpene they don't name. The search for 'pinene' also matches inside 'terpinene', so the low-anxiety filter, which screens out pinene, wrongly drops 5 products that name terpinene but not pinene.",
+      null,
+      null
+    ],
+    [
       "new",
-      "Data source for descriptions",
-      "Choose one",
+      "Ranking by terpene percentages",
+      "Uses measured amounts when a product gives them.",
       null,
-      "A (suggested): keep fetching each in-stock product's own page, cached for a day. Current, but the first run takes about a minute. B: read CannaScraper's catalog.json file from its code repository in one 7 MB download. Fast, but its descriptions are from 1 September and miss newer products. C (later): have CannaScraper's hourly build publish a small terpene file, so this tool needs only one download and stays current.",
+      "57 products list terpene percentages. For those, the ranking uses the terpene with the highest measured percentage, instead of the first terpene named, and shows the total terpene percentage.",
+      [
+        "Products are ranked by the first terpene named.",
+        "Ranking by measured amounts where they exist.",
+        "57 products are ranked on real numbers."
+      ],
+      null
+    ],
+    [
+      "new",
+      "Effect profiles",
+      "--profile fills in the terpenes and cannabinoids for a goal.",
       null,
+      "Sleep: myrcene, linalool and caryophyllene; products that also contain CBN (a cannabinoid, like THC) rank higher; avoids pinene and terpinolene. Evidence: animal studies and user reports.\nCalm: linalool, caryophyllene and limonene; products with CBD rank higher; avoids pinene and terpinolene. Evidence: one controlled human trial for limonene.\nFocus-calm: limonene and caryophyllene in a sativa or hybrid; avoids pinene and terpinolene. Evidence: the limonene trial plus user reports.\nAppetite: myrcene, caryophyllene and limonene; avoids humulene and THCV, both reported to suppress appetite. Evidence: small human studies for THCV, weak for humulene.\nLaugh: limonene and myrcene. Evidence: user reports only.\nBody and pain: myrcene, caryophyllene and humulene; products with CBG rank higher. Evidence: animal studies and user reports.\nCreative: limonene, terpinolene, ocimene and valencene, with a warning that it is the profile most likely to cause anxiety. Evidence: user reports only.",
+      [
+        "You type terpene names by hand.",
+        "Named profiles with an evidence label each.",
+        "'--profile sleep' picks the terpenes for you."
+      ],
+      null
+    ],
+    [
+      "new",
+      "Cannabinoid filter",
+      "--cannabinoids cbg,cbn keeps products that mention either one.",
+      null,
+      "Product descriptions mention CBD in 331 products, CBG in 178, CBN in 68, CBC in 32 and THCV in 10. All five are cannabinoids, like THC.",
+      [
+        "Only a minimum CBD amount can be set.",
+        "Filtering on any named cannabinoid.",
+        "You can ask for CBG or CBN products directly."
+      ],
+      null
+    ],
+    [
+      "new",
+      "Effect-word ranking",
+      "--effects relax,sleep ranks by the producer's own effect words.",
+      null,
+      "983 products describe effects in words such as relaxing, uplifting or sleepy. Producers word these very differently, so matches move a product up the ranking instead of removing products that don't match.",
+      [
+        "Producers' effect words are ignored.",
+        "Products whose descriptions match rank higher.",
+        "Picks lean toward what producers say the product does."
+      ],
+      null
+    ],
+    [
+      "new",
+      "Whole-province search",
+      "--stores all searches every store in your province.",
+      null,
+      "Useful for finding where a specific product is in stock when the nearest stores are out.",
+      [
+        "Only the nearest five stores, or a number you set.",
+        "An option to search every store.",
+        "You can find a product anywhere in the province."
+      ],
       null
     ]
   ],
+  "choices": [
+    [
+      "source",
+      "Where should product descriptions come from?",
+      [
+        [
+          "A",
+          "Each product's own page, cached for a day",
+          1,
+          "Always current. The first run fetches every in-stock product's page and took 54 seconds in today's test."
+        ],
+        [
+          "B",
+          "CannaScraper's catalog.json in one download",
+          0,
+          "About 7 MB and fast, but its descriptions are from 1 September and miss newer products."
+        ],
+        [
+          "C",
+          "A new terpene file published by CannaScraper",
+          0,
+          "One small download that stays current, but it needs a change to the CannaScraper repository first."
+        ]
+      ],
+      "A works today with no other changes. C is the best long-term setup and can follow later."
+    ],
+    [
+      "profiles",
+      "Which effect profiles should be included?",
+      [
+        [
+          "A",
+          "All seven",
+          1,
+          "Sleep, calm, focus-calm, appetite, laugh, body and pain, and creative, each with its evidence label."
+        ],
+        [
+          "B",
+          "Only the four with the strongest evidence",
+          0,
+          "Sleep, calm, focus-calm and appetite."
+        ]
+      ],
+      "All seven, because each one shows its evidence and creative carries an anxiety warning."
+    ],
+    [
+      "effects",
+      "Should producers' effect words change the ranking by default?",
+      [
+        [
+          "A",
+          "Only when --effects is used",
+          1,
+          "Rankings stay driven by terpenes unless you ask."
+        ],
+        [
+          "B",
+          "Always, whenever you use --profile, matching that profile's goal against producers' effect words",
+          0,
+          "Every profile also nudges products whose descriptions match its goal."
+        ]
+      ],
+      "Only when asked, because producers' wording is inconsistent."
+    ]
+  ],
   "wrapup": {
-    "summary": "Every terpene on the site, profiles built from known combinations, cannabinoid and effect-word filters, and two matching bugs fixed.",
+    "summary": "A proposal to recognise all 26 terpenes, fix two matching bugs, and add effect profiles, cannabinoid filters, effect-word ranking and a whole-province search.",
     "changing": "The search script, the SKILL.md instructions file, the README, the tests, and the system doc that describes matching.",
-    "blocking": "I won't edit any code until you approve this plan and choose a data source (A, B or C).",
-    "next": "Reply 'Build plan approved: canna-stock-finder criteria' and say A, B or C.",
+    "blocking": "I won't edit any code until you answer the three questions and approve.",
+    "next": "I build it on the AjsAgent/initial-skill branch, run the tests and a live search, and show you the results.",
     "todo": [
+      "Pick your answers (Choices).",
+      "Tap <b>Copy my reply<\/b>.",
       "Tap <b>Copy my reply<\/b> and send it: \"Build plan approved: canna-stock-finder criteria\", or say what to change."
     ]
-  },
-  "choices": []
+  }
 };
 // ---- End of PAGE. Nothing below needs editing. ----------------------------------------------
 
